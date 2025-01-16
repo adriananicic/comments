@@ -3,12 +3,19 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito+Sans:wght@200;300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
-.text-1 {
-  @apply font-semibold text-[18px] leading-[21.78px];
+.body-1 {
+  @apply font-sans font-semibold text-[18px] leading-[21.78px];
 }
 
-.text-2{
-  @apply font-medium text-[18px] leading-[21.78px];
+.body-2{
+  @apply font-medium text-lg leading-[21.78px];
+}
+
+.display-1{
+  @apply font-bold text-6xl leading-[21.78px];
+}
+.display-2{
+  @apply font-medium text-2xl leading-[21.78px];
 }
 
 :root {
@@ -31,7 +38,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Inter';
+  @apply font-sans
 }
 
 @layer utilities {
