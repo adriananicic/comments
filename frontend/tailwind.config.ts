@@ -10,7 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         background: 'var(--background)',
-        foreground: 'var(--foreground)',
+        primary: {
+          DEFAULT: 'var(--primary)',
+          strong: 'var(--primary-strong)',
+          medium: 'var(--primary-medium',
+          weak: 'var(--primary-weak)',
+        },
+        accent: 'var(--accent)',
+        danger: 'var(--danger)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
       },
     },
   },
