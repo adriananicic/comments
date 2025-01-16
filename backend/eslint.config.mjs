@@ -10,11 +10,10 @@ export default [
     extends: [
       'eslint:recommended',
       'plugin:@typescript-eslint/recommended',
-      'plugin:prettier/recommended', // Add this line
+      'plugin:prettier/recommended', 
     ],
-    plugins: ['prettier'], // Ensure Prettier is included as a plugin
+    plugins: ['prettier'], 
     rules: {
-      // Optional: Customize Prettier's rules (e.g., disable semicolons)
       'prettier/prettier': [
         'error',
         {
