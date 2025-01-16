@@ -13,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="w-screen h-screen overflow-x-hidden py-4">
+        {children}
+      </body>
     </html>
   );
 }

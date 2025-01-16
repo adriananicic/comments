@@ -12,10 +12,10 @@ const LandingPage = () => {
       </h2>
       <div className="mt-4 flex items-center justify-between text-2 gap-10">
         <Link target="_blank" href={'https://github.com/adriananicic/comments'}>
-          <Button buttonType="normal" label="Code Review" />
+          <Button icon="code" buttonType="normal" label="Code Review" />
         </Link>
         <Link href={'/posts'}>
-          <Button buttonType="normal" label="View Blogs" />
+          <Button buttonType="normal" label="View Posts" />
         </Link>
       </div>
     </div>

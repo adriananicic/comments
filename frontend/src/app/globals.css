@@ -8,14 +8,14 @@
 }
 
 .body-2{
-  @apply font-medium text-lg leading-[21.78px];
+  @apply font-sans font-medium text-lg leading-[21.78px];
 }
 
 .display-1{
-  @apply font-bold text-6xl leading-[21.78px];
+  @apply font-bold text-6xl font-sans ;
 }
 .display-2{
-  @apply font-medium text-2xl leading-[21.78px];
+  @apply font-sans font-medium text-2xl leading-[21.78px];
 }
 
 :root {

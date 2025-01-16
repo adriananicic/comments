@@ -4,6 +4,7 @@ import React from 'react';
 
 const icons = {
   send: '/assets/icons/send.svg',
+  code: '/assets/icons/code.svg',
 };
 
 export type IconName = keyof typeof icons;
