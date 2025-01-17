@@ -5,9 +5,11 @@ import AddComment from '../molecules/comments/AddComment';
 import CommentCard from '../molecules/comments/CommentCard';
 import CommentDate from '../molecules/comments/CommentDate';
 import CommentContextProvider from '../context/CommentContext';
+import { useAuth } from '../context/AuthContext';
 
 const CommentSection = () => {
   const commentsRef = useRef<HTMLDivElement | null>(null);
+  const { userName } = useAuth();
 
   const [comments, setComments] = useState(commentsMock);
 
@@ -39,7 +41,7 @@ const CommentSection = () => {
                 const newComment = {
                   text: value,
                   author: {
-                    name: 'Adrian',
+                    name: userName ? userName : 'trebadabudemulogiran',
                     picture:
                       'https://i.scdn.co/image/ab6761670000ecd4551166d4f402a9b7b55f1bcd',
                   },
