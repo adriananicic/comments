@@ -32,7 +32,7 @@ const Button: FC<IButtonProps> = ({
         disabled
           ? 'cursor-default opacity-50'
           : 'cursor-pointer hover:scale-[102%] active:scale-[98%]',
-        'text-primary-weak rounded-md p-4 gap-3 flex items-center  transition-all duration-200'
+        'text-primary-weak rounded-md p-4 gap-3 flex items-center transition-all duration-200 '
       )}
     >
       {icon && <Icon size={24} className="bg-primary-weak" icon={icon} />}

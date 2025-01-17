@@ -12,7 +12,7 @@ const SinglePostPage: FC<ISinglePostPageProps> = ({ id }) => {
   if (!post) return;
 
   return (
-    <div className="p-10 flex h-full flex-col gap-5 ">
+    <div className="p-10 flex h- flex-col gap-5 ">
       <h1 className="display-1">{post.title}</h1>
       <p className="body-2">{post.content}</p>
       <CommentSection />

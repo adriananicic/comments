@@ -5,6 +5,9 @@ import React from 'react';
 const icons = {
   send: '/assets/icons/send.svg',
   code: '/assets/icons/code.svg',
+  dot: '/assets/icons/dot.svg',
+  reply: '/assets/icons/reply.svg',
+  plus: '/assets/icons/plus.svg',
 };
 
 export type IconName = keyof typeof icons;
