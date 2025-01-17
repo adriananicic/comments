@@ -10,7 +10,7 @@ const mockUsers: mockUser[] = [
   {
     name: 'Hary',
     imageUrl:
-      'https://pbs.twimg.com/profile_images/428290769469067264/QUH5EtcD_400x400.jpeg',
+      'https://www.shutterstock.com/image-photo/handsome-man-black-suit-white-600nw-1091729747.jpg',
   },
   {
     name: 'Adrian',

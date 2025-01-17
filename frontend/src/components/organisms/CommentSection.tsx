@@ -1,40 +1,60 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { formatDateFromTimestamp } from '@/lib/date-format';
 import AddComment from '../molecules/comments/AddComment';
 import CommentCard from '../molecules/comments/CommentCard';
 import CommentDate from '../molecules/comments/CommentDate';
+import CommentContextProvider from '../context/CommentContext';
 
 const CommentSection = () => {
   const commentsRef = useRef<HTMLDivElement | null>(null);
 
+  const [comments, setComments] = useState(commentsMock);
+
   useEffect(() => {
     if (commentsRef.current) commentsRef.current.scrollIntoView();
-  }, []);
+  }, [comments]);
 
   return (
     <div className="w-full flex items-center flex-col">
       <h3 className="display-2 m-4">Comments:</h3>
-      <div className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary">
-        <div className="flex flex-col gap-4 relative min-h-full py-8">
-          {commentsMock.map((comment, index) => (
-            <>
-              {index === 0 && <CommentDate timestamp={comment.timestamp} />}
-              {commentsMock[index + 1] &&
-                formatDateFromTimestamp(comment.timestamp) !==
-                  formatDateFromTimestamp(
-                    commentsMock[index + 1].timestamp
-                  ) && (
-                  <CommentDate timestamp={commentsMock[index + 1].timestamp} />
-                )}
-              <CommentCard key={comment.id} comment={comment} />
-            </>
-          ))}
-        </div>
-        <AddComment />
+      <CommentContextProvider>
+        <div className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary">
+          <div className="flex flex-col gap-4 relative min-h-full py-8">
+            {comments.map((comment, index) => (
+              <>
+                {index === 0 && <CommentDate timestamp={comment.timestamp} />}
+                {commentsMock[index + 1] &&
+                  formatDateFromTimestamp(comment.timestamp) !==
+                    formatDateFromTimestamp(comments[index + 1].timestamp) && (
+                    <CommentDate timestamp={comments[index + 1].timestamp} />
+                  )}
+                <CommentCard key={comment.id} comment={comment} />
+              </>
+            ))}
+          </div>
+          <AddComment
+            onClick={(value) => {
+              if (value) {
+                const newComment = {
+                  text: value,
+                  author: {
+                    name: 'Adrian',
+                    picture:
+                      'https://i.scdn.co/image/ab6761670000ecd4551166d4f402a9b7b55f1bcd',
+                  },
+                  id: '19',
+                  timestamp: Date.now(),
+                  parent_id: undefined,
+                };
+                setComments((prev) => [...prev, newComment]);
+              }
+            }}
+          />
 
-        <div ref={commentsRef} />
-      </div>
+          <div ref={commentsRef} />
+        </div>
+      </CommentContextProvider>
     </div>
   );
 };
@@ -58,7 +78,7 @@ const commentsMock = [
     author: {
       name: 'Hary',
       picture:
-        'https://pbs.twimg.com/profile_images/428290769469067264/QUH5EtcD_400x400.jpeg',
+        'https://www.shutterstock.com/image-photo/handsome-man-black-suit-white-600nw-1091729747.jpg',
     },
     text: 'Hey Ivan! Have you tried Googling that?',
     timestamp: 414514860000,
@@ -118,3 +138,21 @@ const commentsMock = [
     timestamp: 1737120297699,
   },
 ];
+
+export const getAuthorById = (id: string) => {
+  // Recursive helper function to search through comments and their replies
+  const findComment: any = (commentsList: any) => {
+    for (const comment of commentsList) {
+      if (comment.id === id) {
+        return comment.author.name;
+      }
+      if (comment.replies) {
+        const found = findComment(comment.replies);
+        if (found) return found;
+      }
+    }
+    return null; // Return null if no matching comment is found
+  };
+
+  return findComment(commentsMock);
+};

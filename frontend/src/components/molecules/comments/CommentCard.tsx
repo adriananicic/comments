@@ -3,6 +3,7 @@ import CommentRenderer from './CommentRenderer';
 import { FC, useState } from 'react';
 import { formatTimeFromTimestamp } from '@/lib/time-format';
 import CommentReply from './CommentReply';
+import { useCommentId } from '@/components/context/CommentContext';
 
 interface ICommentCardProps {
   comment: any; //Change this
@@ -10,9 +11,15 @@ interface ICommentCardProps {
 
 const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
+  const { setReplyToId, setReplyToText } = useCommentId();
+
+  const handleReplyClick = (text: string) => {
+    setReplyToId(comment.id);
+    setReplyToText(text);
+  };
 
   return (
-    <div className="flex items-start justify-start gap-3 ">
+    <div className="flex items-start justify-start gap-3  ">
       <img
         height={48}
         width={48}
@@ -21,7 +28,10 @@ const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
         alt={comment.author.name}
       />
       <div className="flex flex-col gap-3">
-        <div className="flex max-w-full flex-col bg-primary-weak rounded-md border-[1px] border-primary-medium p-6 gap-3">
+        <div
+          onClick={() => setShowReplies((prev) => !prev)}
+          className="flex max-w-full flex-col bg-primary-weak rounded-md border-[1px] border-primary-medium p-6 gap-3 cursor-pointer "
+        >
           <p className="text-primary-strong body-1">{comment.author.name}</p>
           <CommentRenderer text={comment.text} />
         </div>
@@ -31,7 +41,7 @@ const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
           </p>
           <Icon size={2} className="bg-primary" icon="dot" />
           <p
-            onClick={() => setShowReplies((prev) => !prev)}
+            onClick={() => handleReplyClick(comment.text)}
             className="text-base font-medium text-accent cursor-pointer"
           >
             Reply {comment.replies && `(${comment.replies.length})`}
