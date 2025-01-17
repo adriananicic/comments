@@ -49,7 +49,7 @@ const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
         </div>
         {showReplies &&
           comment.replies?.map((reply: any, index: number) => (
-            <CommentReply index={index} reply={reply} />
+            <CommentReply key={index} index={index} reply={reply} />
           ))}
       </div>
     </div>

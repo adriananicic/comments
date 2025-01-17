@@ -24,7 +24,7 @@ const CommentSection = () => {
         <div className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary">
           <div className="flex flex-col gap-4 relative min-h-full py-8">
             {comments.map((comment, index) => (
-              <>
+              <div key={index}>
                 {index === 0 && <CommentDate timestamp={comment.timestamp} />}
                 {commentsMock[index + 1] &&
                   formatDateFromTimestamp(comment.timestamp) !==
@@ -32,7 +32,7 @@ const CommentSection = () => {
                     <CommentDate timestamp={comments[index + 1].timestamp} />
                   )}
                 <CommentCard key={comment.id} comment={comment} />
-              </>
+              </div>
             ))}
           </div>
           <AddComment
@@ -138,6 +138,15 @@ const commentsMock = [
     },
     text: "https://<script>alert('franko')</script>",
     timestamp: 1737120297699,
+  },
+  {
+    id: '14',
+    author: {
+      name: 'Uefčk',
+      picture: 'https://mundus.tech/assets/img/faces/team-1.jpg',
+    },
+    text: 'Decki decki svima 30 eura sat',
+    timestamp: 1737121297699,
   },
 ];
 

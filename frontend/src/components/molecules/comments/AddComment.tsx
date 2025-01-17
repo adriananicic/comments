@@ -16,7 +16,7 @@ const AddComment = ({ onClick }: { onClick: (value: any) => void }) => {
   return (
     <div className="sticky bottom-4 left-8 right-8 w-full gap-2">
       {replyToText && (
-        <div className=" p-1 bg-accent opacity-25 my-1 cursor-pointer text-primary-weak rounded-md -top-10  w-full ">
+        <div className=" p-1 bg-[#023168]/25 backdrop-blur-2xl my-1 cursor-pointer text-primary-weak rounded-md -top-10  w-full ">
           {replyToText?.substring(0, 60)}...
         </div>
       )}
