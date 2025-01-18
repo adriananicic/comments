@@ -7,7 +7,7 @@ const repo = new PrismaCommentRepository();
 const commentController = new CommentController(repo);
 
 commentRouter.get(
-  '/getPostComments/:postId/:commentId',
+  '/getPostComments',
   async (
     req: Request<any, any, any, { postId: string; parentCommentId?: string }>,
     res: Response
