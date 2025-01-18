@@ -12,3 +12,39 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  userId         String    @id @default(cuid())
+  name           String
+  username       String    @unique
+  profilePicture String
+  Posts          Post[]
+  Comments       Comment[]
+}
+
+model Post {
+  postId    String    @id @default(cuid())
+  title     String
+  body      String
+  timestamp DateTime  @default(now())
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [userId])
+  comments  Comment[]
+}
+
+model Comment {
+  commentId        String    @id @default(cuid())
+  body             String
+  timestamp        DateTime  @default(now())
+  update_timestamp DateTime  @updatedAt()
+  parentCommentId  String?
+  commenterId      String
+  postId           String
+  commenter        User      @relation(fields: [commenterId], references: [userId])
+  post             Post      @relation(fields: [postId], references: [postId], onDelete: Cascade)
+  parentComment    Comment?  @relation(name: "ParentComment", fields: [parentCommentId], references: [commentId], onDelete: Cascade)
+  childComments    Comment[] @relation(name: "ParentComment")
+
+  @@index([postId])
+  @@index([parentCommentId])
+}
