@@ -48,13 +48,11 @@ export function getPostById(id: string): IPostCard | undefined {
 }
 
 const PostsPage = () => {
-  const { userName } = useAuth();
   const { isFetchingPosts, posts } = useLoadPosts();
   return (
     <div className="w-screen h-screen flex flex-col justify-center p-4 bg-background">
       <h1 className="text-accent display-1 text-center  ">
         Read something interesting
-        {userName}
       </h1>
       <div className="flex items-center justify-center w-full h-full p-5">
         <div className="w-full h-full grid grid-cols-1 sm:grid-cols-3 gap-3 items-center justify-center place-items-center ">

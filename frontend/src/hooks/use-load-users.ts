@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BE_URL } from '../../constants';
+
 import { getUserReturn } from '@/types';
 
 export const useLoadUsers = () => {
@@ -10,7 +10,7 @@ export const useLoadUsers = () => {
     try {
       setIsFetchingUsers(true);
 
-      const res = await fetch(`${BE_URL}/user/list`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BE_URL}/user/list`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
