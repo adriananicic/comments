@@ -30,7 +30,7 @@ const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
       <div className="flex flex-col gap-3">
         <div
           onClick={() => setShowReplies((prev) => !prev)}
-          className="flex max-w-full flex-col bg-primary-weak rounded-md border-[1px] border-primary-medium p-6 gap-3 cursor-pointer "
+          className="flex max-w-max flex-col bg-primary-weak rounded-md border-[1px] border-primary-medium p-6 gap-3 cursor-pointer "
         >
           <p className="text-primary-strong body-1">{comment.author.name}</p>
           <CommentRenderer text={comment.text} />
