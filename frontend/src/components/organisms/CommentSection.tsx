@@ -1,31 +1,37 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import { formatDateFromTimestamp } from '@/lib/date-format';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import AddComment from '../molecules/comments/AddComment';
 import CommentCard from '../molecules/comments/CommentCard';
 import CommentDate from '../molecules/comments/CommentDate';
 import CommentContextProvider from '../context/CommentContext';
 import { useAuth } from '../context/AuthContext';
-import Button from '../atoms/Button';
+import { useLoadSinglePost } from '@/hooks/use-load-single-post';
+import { formatDateFromTimestamp } from '@/lib/date-format';
 
-const CommentSection = () => {
+interface ICommentSectionProps {
+  postId: string;
+}
+const CommentSection: FC<ICommentSectionProps> = ({ postId }) => {
+  const { comments, isCommentFetching, refetchComments, fetchComments } =
+    useLoadSinglePost(postId);
+
   const commentsRef = useRef<HTMLDivElement | null>(null);
   const containerScrollRef = useRef<HTMLDivElement | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
   const [firstCommentId, setFirstCommentId] = useState<string>('');
   const { userName } = useAuth();
 
-  const [comments, setComments] = useState(getComments());
+  // const [comments, setComments] = useState(getComments());
 
-  const loadMoreComments = () => {
-    setComments(getComments());
-  };
+  // const loadMoreComments = () => {
+  //   setComments(getComments());
+  // };
 
   const handleScroll = () => {
     if (containerScrollRef.current) {
       if (containerScrollRef.current.scrollTop === 0) {
-        setFirstCommentId(comments[0].id);
-        loadMoreComments();
+        // setFirstCommentId(comments[0].id);
+        // loadMoreComments();
         const element = document.getElementById(firstCommentId);
         element?.scrollIntoView();
       }
@@ -50,14 +56,14 @@ const CommentSection = () => {
         >
           <div className="flex flex-col gap-4 relative min-h-full py-8">
             {comments.map((comment, index) => (
-              <div id={comment.id} key={index}>
-                {index === 0 && <CommentDate timestamp={comment.timestamp} />}
+              <div id={comment.commentId} key={index}>
+                {index === 0 && <CommentDate date={comment.timestamp} />}
                 {comments[index + 1] &&
                   formatDateFromTimestamp(comment.timestamp) !==
                     formatDateFromTimestamp(comments[index + 1].timestamp) && (
-                    <CommentDate timestamp={comments[index + 1].timestamp} />
+                    <CommentDate date={comments[index + 1].timestamp} />
                   )}
-                <CommentCard key={comment.id} comment={comment} />
+                <CommentCard key={comment.commentId} comment={comment} />
               </div>
             ))}
           </div>
@@ -75,7 +81,7 @@ const CommentSection = () => {
                   timestamp: Date.now(),
                   parent_id: undefined,
                 };
-                setComments((prev) => [...prev, newComment]);
+                // setComments((prev) => [...prev, newComment]);
               }
             }}
           />

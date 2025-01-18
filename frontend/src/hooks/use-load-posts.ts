@@ -17,7 +17,7 @@ export const useLoadPosts = () => {
         },
       });
       const posts = await res.json();
-      setPosts(posts);
+      setPosts(posts.data);
 
       setIsFetchingPosts(false);
     } catch (error) {

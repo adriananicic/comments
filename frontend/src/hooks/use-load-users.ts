@@ -17,7 +17,7 @@ export const useLoadUsers = () => {
         },
       });
       const users = await res.json();
-      setUsers(users);
+      setUsers(users.data);
 
       setIsFetchingUsers(false);
     } catch (error) {

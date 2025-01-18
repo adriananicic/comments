@@ -19,7 +19,7 @@ export const useLoadSinglePost = (postId: string) => {
         },
       });
       const post = await res.json();
-      setPost(post);
+      setPost(post.data);
 
       setIsPostFetching(false);
     } catch (error) {
@@ -31,12 +31,15 @@ export const useLoadSinglePost = (postId: string) => {
     try {
       setIsCommentFetching(true);
 
-      const res = await fetch(`${BE_URL}/comments/getPostComments/${postId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const res = await fetch(
+        `${BE_URL}/comment/getPostComments?postId=${postId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       const commentList = await res.json();
       setComments(commentList);
 
@@ -47,12 +50,15 @@ export const useLoadSinglePost = (postId: string) => {
   };
 
   const fetchReplies = async (parentCommentId: string) => {
-    const res = await fetch(`${BE_URL}/comments/getPostComments/${postId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const res = await fetch(
+      `${BE_URL}/comments/getPostComments?postId=${postId}&parentCommentId=${parentCommentId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     const commentList = await res.json();
     // Update this logic so that it updates the list
@@ -74,6 +80,6 @@ export const useLoadSinglePost = (postId: string) => {
     comments,
     refetchComments,
     isCommentFetching,
-    fetchComments,
+    fetchReplies,
   };
 };
