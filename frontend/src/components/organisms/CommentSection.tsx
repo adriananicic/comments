@@ -4,7 +4,6 @@ import AddComment from '../molecules/comments/AddComment';
 import CommentCard from '../molecules/comments/CommentCard';
 import CommentDate from '../molecules/comments/CommentDate';
 import CommentContextProvider from '../context/CommentContext';
-import { useAuth } from '../context/AuthContext';
 import { useLoadSinglePost } from '@/hooks/use-load-single-post';
 import { formatDateFromTimestamp } from '@/lib/date-format';
 

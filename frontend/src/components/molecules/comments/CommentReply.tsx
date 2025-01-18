@@ -1,7 +1,6 @@
 import { Icon } from '@/components/atoms/Icon';
 import CommentCard from './CommentCard';
 import { FC } from 'react';
-import { useLoadSinglePost } from '@/hooks/use-load-single-post';
 import { usePathname } from 'next/navigation';
 import { getCommentReturn } from '@/types';
 

@@ -31,8 +31,8 @@ const CommentCard: FC<ICommentCardProps> = ({
     setReplyToName(comment.commenter.name);
   };
 
-  const handleDeleteClick = (commentId: string) => {
-    deleteComment(commentId);
+  const handleDeleteClick = async (commentId: string) => {
+    await deleteComment(commentId);
     refetchComments();
   };
 
