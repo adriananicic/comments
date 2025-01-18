@@ -6,19 +6,34 @@ import CommentReply from './CommentReply';
 import { useCommentId } from '@/components/context/CommentContext';
 import { useAuth } from '@/components/context/AuthContext';
 import Button from '@/components/atoms/Button';
+import { getCommentReturn } from '@/types';
+import { useDeleteComment } from '@/hooks/use-delete-comment';
 
 interface ICommentCardProps {
-  comment: any; //Change this
+  comment: getCommentReturn;
+  refetchComments: () => void;
+  fetchReplies: (parent: getCommentReturn) => void;
 }
 
-const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
+const CommentCard: FC<ICommentCardProps> = ({
+  comment,
+  refetchComments,
+  fetchReplies,
+}) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
-  const { setReplyToId, setReplyToText } = useCommentId();
-  const { userName } = useAuth();
+  const { setReplyToId, setReplyToText, setReplyToName } = useCommentId();
+  const { deleteComment, isCommentDeleting } = useDeleteComment();
+  const { userId } = useAuth();
 
   const handleReplyClick = (text: string) => {
-    setReplyToId(comment.id);
+    setReplyToId(comment.commentId);
     setReplyToText(text);
+    setReplyToName(comment.commenter.name);
+  };
+
+  const handleDeleteClick = (commentId: string) => {
+    deleteComment(commentId);
+    refetchComments();
   };
 
   return (
@@ -27,8 +42,8 @@ const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
         height={48}
         width={48}
         className="rounded-full object-cover w-[48px] h-[48px] flex-shrink-0"
-        src={comment.author.picture}
-        alt={comment.author.name}
+        src={comment.commenter.profilePicture}
+        alt={comment.commenter.name}
       />
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
@@ -36,12 +51,20 @@ const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
             onClick={() => setShowReplies((prev) => !prev)}
             className="flex  flex-col bg-primary-weak rounded-md border-[1px] border-primary-medium p-6 gap-3 cursor-pointer "
           >
-            <p className="text-primary-strong body-1">{comment.author.name}</p>
-            <CommentRenderer text={comment.text} />
+            <p className="text-primary-strong body-1">
+              {comment.commenter.name}
+            </p>
+            <CommentRenderer text={comment.body} />
           </div>
-          {/* Change this to ID */}
-          {comment.author.name === userName && (
-            <Button buttonType="danger" icon="delete" />
+          {comment.commenter.userId === userId && (
+            <Button
+              loading={isCommentDeleting}
+              buttonType="danger"
+              icon="delete"
+              onClick={() => {
+                handleDeleteClick(comment.commentId);
+              }}
+            />
           )}
         </div>
         <div className="flex gap-2 items-center">
@@ -50,16 +73,24 @@ const CommentCard: FC<ICommentCardProps> = ({ comment }) => {
           </p>
           <Icon size={2} className="bg-primary" icon="dot" />
           <p
-            onClick={() => handleReplyClick(comment.text)}
+            onClick={() => handleReplyClick(comment.body)}
             className="text-base font-medium text-accent cursor-pointer"
           >
-            Reply {comment.replies && `(${comment.replies.length})`}
+            Reply {comment.childComments && `(${comment.noOfReplies})`}
           </p>
         </div>
         {showReplies &&
-          comment.replies?.map((reply: any, index: number) => (
-            <CommentReply key={index} index={index} reply={reply} />
-          ))}
+          comment.childComments?.map(
+            (reply: getCommentReturn, index: number) => (
+              <CommentReply
+                fetchReplies={fetchReplies}
+                key={index}
+                index={index}
+                reply={reply}
+                refetchComments={refetchComments}
+              />
+            )
+          )}
       </div>
     </div>
   );

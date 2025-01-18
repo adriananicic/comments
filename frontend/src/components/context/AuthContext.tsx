@@ -2,22 +2,20 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
 
 interface IAuthContext {
-  userName: string | null; //turn this to id when backend
-  setUserName: (value: string) => void;
+  userId: string | null;
+  setUserId: (value: string) => void;
 }
 
 const AuthContext = createContext<IAuthContext>({
-  userName: null,
-  setUserName: () => {},
+  userId: null,
+  setUserId: () => {},
 });
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [userName, setUserName] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   return (
-    <AuthContext.Provider
-      value={{ setUserName: setUserName, userName: userName }}
-    >
+    <AuthContext.Provider value={{ setUserId: setUserId, userId: userId }}>
       {children}
     </AuthContext.Provider>
   );

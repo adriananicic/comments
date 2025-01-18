@@ -1,12 +1,24 @@
 import Button from '@/components/atoms/Button';
+import { useAuth } from '@/components/context/AuthContext';
 import { useCommentId } from '@/components/context/CommentContext';
-import { getAuthorById } from '@/components/organisms/CommentSection';
-import React, { useEffect, useRef, useState } from 'react';
+import { useAddComment } from '@/hooks/use-add-comment';
+import { usePathname } from 'next/navigation';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
-const AddComment = ({ onClick }: { onClick: (value: any) => void }) => {
+interface IAddCommentProps {
+  refetchComments: () => void;
+}
+
+const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
+  const { addComment, isAddingComment } = useAddComment();
+  const { userId } = useAuth();
+
   const [text, setText] = useState<string>('');
-  const { replyToId, setReplyToId, replyToText, setReplyToText } =
+  const postId = usePathname().split('/')[2];
+
+  const { replyToId, setReplyToId, replyToText, setReplyToText, replyToName } =
     useCommentId();
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -21,14 +33,15 @@ const AddComment = ({ onClick }: { onClick: (value: any) => void }) => {
         </div>
       )}
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          onClick(text);
+          userId && (await addComment(text, userId, postId, replyToId));
+          await refetchComments();
           setText('');
         }}
         className="  gap-4 p-2 bg-primary-weak border-[1px] border-primary-medium rounded-md flex justify-between items-center"
       >
-        <Button buttonType="normal" icon="plus" />
+        <Button buttonType="normal" type="button" icon="plus" />
         {replyToId && (
           <div
             onClick={() => {
@@ -37,7 +50,7 @@ const AddComment = ({ onClick }: { onClick: (value: any) => void }) => {
             }}
             className="text-xs p-2 rounded-md bg-primary-strong cursor-pointer text-primary-weak opacity-50 "
           >
-            Replying to {getAuthorById(replyToId)}
+            Replying to {replyToName}
           </div>
         )}
         <input
@@ -54,6 +67,7 @@ const AddComment = ({ onClick }: { onClick: (value: any) => void }) => {
           label="Send message"
           icon="send"
           type="submit"
+          loading={isAddingComment}
         />
       </form>
     </div>

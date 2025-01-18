@@ -4,10 +4,10 @@ import PostsPage from '@/components/pages/PostsPage';
 import React from 'react';
 
 const page = () => {
-  const { userName } = useAuth();
+  const { userId } = useAuth();
 
   if (!window.location) return;
-  if (!userName) window.location.href = '/login';
+  if (!userId) window.location.href = '/login';
   return <PostsPage />;
 };
 

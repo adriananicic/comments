@@ -7,7 +7,8 @@ export const useAddComment = () => {
   const addComment = async (
     commentText: string,
     commenterId: string,
-    postId: string
+    postId: string,
+    parentCommentId: string | null
   ) => {
     try {
       setIsAddingComment(true);
@@ -22,6 +23,7 @@ export const useAddComment = () => {
           body: commentText,
           commenterId: commenterId,
           postId: postId,
+          parentCommentId: parentCommentId,
         }),
       });
 

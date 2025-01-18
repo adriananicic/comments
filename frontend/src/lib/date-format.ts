@@ -1,4 +1,4 @@
-export const formatDateFromTimestamp = (date: Date) => {
+export const formatDateFromTimestamp = (dateInput: string | Date) => {
   const days = [
     'Sunday',
     'Monday',
@@ -8,6 +8,8 @@ export const formatDateFromTimestamp = (date: Date) => {
     'Friday',
     'Saturday',
   ];
+
+  const date = new Date(dateInput);
   const today = new Date();
   const day = date.getDate();
   const month = date.getMonth() + 1;

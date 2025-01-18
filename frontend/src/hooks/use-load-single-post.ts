@@ -41,7 +41,8 @@ export const useLoadSinglePost = (postId: string) => {
         }
       );
       const commentList = await res.json();
-      setComments(commentList);
+      setComments(commentList.data);
+      console.log(commentList.data);
 
       setIsCommentFetching(false);
     } catch (error) {
@@ -49,20 +50,50 @@ export const useLoadSinglePost = (postId: string) => {
     }
   };
 
-  const fetchReplies = async (parentCommentId: string) => {
-    const res = await fetch(
-      `${BE_URL}/comments/getPostComments?postId=${postId}&parentCommentId=${parentCommentId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  const fetchReplies = async (parent: getCommentReturn) => {
+    try {
+      const res = await fetch(
+        `${BE_URL}/comment/getPostComments?postId=${postId}&parentCommentId=${parent.commentId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-    const commentList = await res.json();
-    // Update this logic so that it updates the list
-    // setComments(commentList);
+      const repliesObject = await res.json();
+      const replies: getCommentReturn[] = repliesObject.data;
+
+      const updateComment = (
+        comments: getCommentReturn[],
+        parentCommentId: string
+      ): getCommentReturn[] => {
+        return comments.map((comment) => {
+          if (comment.commentId === parentCommentId) {
+            return { ...comment, childComments: replies };
+          }
+
+          if (comment.childComments) {
+            return {
+              ...comment,
+              childComments: updateComment(
+                comment.childComments,
+                parentCommentId
+              ),
+            };
+          }
+
+          return comment;
+        });
+      };
+
+      const asdf = updateComment(comments, parent.commentId);
+      setComments(asdf);
+      console.log('comments: ', comments);
+    } catch (error) {
+      console.log('Error fetching replies:', error);
+    }
   };
 
   const refetchComments = () => {
