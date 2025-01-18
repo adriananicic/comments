@@ -1,19 +1,25 @@
 import { useEffect, useState } from 'react';
 import { BE_URL } from '../../constants';
+import { getUserReturn } from '@/types';
 
 export const useLoadUsers = () => {
-  const [users, setUsers] = useState();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [users, setUsers] = useState<getUserReturn[]>();
+  const [isFetchingUsers, setIsFetchingUsers] = useState<boolean>(false);
 
   const fetchUsers = async () => {
     try {
-      setLoading(true);
+      setIsFetchingUsers(true);
 
-      const res = await fetch(`${BE_URL}`);
+      const res = await fetch(`${BE_URL}/user/list`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const users = await res.json();
       setUsers(users);
 
-      setLoading(false);
+      setIsFetchingUsers(false);
     } catch (error) {
       console.log(error);
     }
@@ -23,5 +29,5 @@ export const useLoadUsers = () => {
     fetchUsers();
   }, []);
 
-  return { users, loading };
+  return { users, isFetchingUsers };
 };

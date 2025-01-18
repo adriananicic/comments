@@ -1,19 +1,25 @@
 import { useEffect, useState } from 'react';
 import { BE_URL } from '../../constants';
+import { Post } from '@/types';
 
 export const useLoadPosts = () => {
-  const [posts, setPosts] = useState();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(false);
 
   const fetchPosts = async () => {
     try {
-      setLoading(true);
+      setIsFetchingPosts(true);
 
-      const res = await fetch(`${BE_URL}`);
+      const res = await fetch(`${BE_URL}/post/list`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const posts = await res.json();
       setPosts(posts);
 
-      setLoading(false);
+      setIsFetchingPosts(false);
     } catch (error) {
       console.log(error);
     }
@@ -23,5 +29,5 @@ export const useLoadPosts = () => {
     fetchPosts();
   }, []);
 
-  return { posts, loading };
+  return { posts, isFetchingPosts };
 };

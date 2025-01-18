@@ -6,37 +6,47 @@ import CommentCard from '../molecules/comments/CommentCard';
 import CommentDate from '../molecules/comments/CommentDate';
 import CommentContextProvider from '../context/CommentContext';
 import { useAuth } from '../context/AuthContext';
-import Button from '../atoms/Button';
 
 const CommentSection = () => {
   const commentsRef = useRef<HTMLDivElement | null>(null);
+  const containerScrollRef = useRef<HTMLDivElement | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
   const { userName } = useAuth();
 
   const [comments, setComments] = useState(getComments());
-  const [shouldScroll, setShouldScroll] = useState<boolean>(true);
 
   const loadMoreComments = () => {
-    setTimeout(() => setShouldScroll(false), 100);
     setComments(getComments());
-    setTimeout(() => setShouldScroll(true), 100);
+  };
+
+  const handleScroll = () => {
+    if (containerScrollRef.current) {
+      if (containerScrollRef.current.scrollTop === 0) loadMoreComments();
+    }
   };
 
   useEffect(() => {
-    if (commentsRef.current && shouldScroll)
-      commentsRef.current.scrollIntoView();
+    if (commentsRef.current)
+      if (containerScrollRef.current?.scrollTop !== 0 || isInitialLoad)
+        commentsRef.current.scrollIntoView();
+    setIsInitialLoad(false);
   }, [comments]);
 
   return (
     <div className="w-full flex items-center flex-col">
       <h3 className="display-2 m-4">Comments:</h3>
       <CommentContextProvider>
-        <div className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary">
+        <div
+          ref={containerScrollRef}
+          onScroll={handleScroll}
+          className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary"
+        >
           <div className="flex flex-col gap-4 relative min-h-full py-8">
-            <Button
+            {/* <Button
               buttonType="normal"
               label="Load more"
               onClick={() => loadMoreComments()}
-            />
+            /> */}
             {comments.map((comment, index) => (
               <div key={index}>
                 {index === 0 && <CommentDate timestamp={comment.timestamp} />}

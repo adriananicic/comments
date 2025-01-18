@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { ButtonHTMLAttributes, FC } from 'react';
 import { Icon, IconName } from './Icon';
+import Spinner from './Spinner';
 
 type ButtonType = 'normal' | 'danger';
 
@@ -9,6 +10,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: IconName;
   onClick?: () => void;
   buttonType: ButtonType;
+  loading?: boolean;
 }
 
 const Button: FC<IButtonProps> = ({
@@ -17,6 +19,7 @@ const Button: FC<IButtonProps> = ({
   label,
   buttonType,
   disabled,
+  loading,
   ...props
 }) => {
   const colors: Record<ButtonType, string> = {
@@ -35,8 +38,14 @@ const Button: FC<IButtonProps> = ({
         'text-primary-weak rounded-md p-4 gap-3 flex items-center transition-all duration-200 '
       )}
     >
-      {icon && <Icon size={24} className="bg-primary-weak" icon={icon} />}
-      {label && <p className="text-primary-weak body-1 ">{label}</p>}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          {icon && <Icon size={24} className="bg-primary-weak" icon={icon} />}
+          {label && <p className="text-primary-weak body-1 ">{label}</p>}
+        </>
+      )}
     </button>
   );
 };

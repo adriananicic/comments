@@ -8,6 +8,7 @@ const icons = {
   dot: '/assets/icons/dot.svg',
   reply: '/assets/icons/reply.svg',
   plus: '/assets/icons/plus.svg',
+  delete: '/assets/icons/delete.svg',
 };
 
 export type IconName = keyof typeof icons;

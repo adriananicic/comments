@@ -26,7 +26,7 @@ const CommentContextProvider = ({ children }: { children: ReactNode }) => {
         replyToText,
       }}
     >
-      ,{children}
+      {children}
     </CommentContext.Provider>
   );
 };
