@@ -2,6 +2,8 @@ import React from 'react';
 import PostCard, { IPostCard } from '../atoms/PostCard';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
+import { useLoadPosts } from '@/hooks/use-load-posts';
+import Spinner from '../atoms/Spinner';
 const mockPosts: { id: string; title: string; content: string }[] = [
   {
     id: '1',
@@ -47,6 +49,7 @@ export function getPostById(id: string): IPostCard | undefined {
 
 const PostsPage = () => {
   const { userName } = useAuth();
+  const { isFetchingPosts, posts } = useLoadPosts();
   return (
     <div className="w-screen h-screen flex flex-col justify-center p-4 bg-background">
       <h1 className="text-accent display-1 text-center  ">
@@ -55,15 +58,19 @@ const PostsPage = () => {
       </h1>
       <div className="flex items-center justify-center w-full h-full p-5">
         <div className="w-full h-full grid grid-cols-1 sm:grid-cols-3 gap-3 items-center justify-center place-items-center ">
-          {mockPosts.map((post) => (
-            <Link key={post.id} href={`posts/${post.id}`}>
-              <PostCard
-                key={post.title}
-                content={post.content}
-                title={post.title}
-              />
-            </Link>
-          ))}
+          {isFetchingPosts || !posts ? (
+            <Spinner />
+          ) : (
+            posts.map((post) => (
+              <Link key={post.postId} href={`posts/${post.postId}`}>
+                <PostCard
+                  key={post.title}
+                  content={post.body}
+                  title={post.title}
+                />
+              </Link>
+            ))
+          )}
         </div>
       </div>
     </div>

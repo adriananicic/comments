@@ -6,11 +6,13 @@ import CommentCard from '../molecules/comments/CommentCard';
 import CommentDate from '../molecules/comments/CommentDate';
 import CommentContextProvider from '../context/CommentContext';
 import { useAuth } from '../context/AuthContext';
+import Button from '../atoms/Button';
 
 const CommentSection = () => {
   const commentsRef = useRef<HTMLDivElement | null>(null);
   const containerScrollRef = useRef<HTMLDivElement | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
+  const [firstCommentId, setFirstCommentId] = useState<string>('');
   const { userName } = useAuth();
 
   const [comments, setComments] = useState(getComments());
@@ -21,7 +23,12 @@ const CommentSection = () => {
 
   const handleScroll = () => {
     if (containerScrollRef.current) {
-      if (containerScrollRef.current.scrollTop === 0) loadMoreComments();
+      if (containerScrollRef.current.scrollTop === 0) {
+        setFirstCommentId(comments[0].id);
+        loadMoreComments();
+        const element = document.getElementById(firstCommentId);
+        element?.scrollIntoView();
+      }
     }
   };
 
@@ -42,13 +49,8 @@ const CommentSection = () => {
           className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary"
         >
           <div className="flex flex-col gap-4 relative min-h-full py-8">
-            {/* <Button
-              buttonType="normal"
-              label="Load more"
-              onClick={() => loadMoreComments()}
-            /> */}
             {comments.map((comment, index) => (
-              <div key={index}>
+              <div id={comment.id} key={index}>
                 {index === 0 && <CommentDate timestamp={comment.timestamp} />}
                 {comments[index + 1] &&
                   formatDateFromTimestamp(comment.timestamp) !==
