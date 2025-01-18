@@ -2,7 +2,7 @@ import { getCommentReturn } from '../../types/getCommentReturn';
 import { CommentMapper } from '../interface/commentMapperInterface';
 
 export class PrismaCommentMapper implements CommentMapper {
-  map(comment: any): getCommentReturn {
+  mapComment(comment: any): getCommentReturn {
     return {
       commentId: comment.commentId,
       body: comment.body,
@@ -18,7 +18,7 @@ export class PrismaCommentMapper implements CommentMapper {
       },
       noOfReplies: comment._count.childComments,
       childComments: comment.childComments?.map((child: any) =>
-        this.map(child)
+        this.mapComment(child)
       ),
     };
   }

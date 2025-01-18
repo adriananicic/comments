@@ -48,6 +48,7 @@ export class PrismaCommentRepository implements ICommentRepository {
                   // reply count for first child of root comment
                   select: { childComments: true },
                 },
+                commenter: true,
               },
             },
             commenter: true,
@@ -55,7 +56,7 @@ export class PrismaCommentRepository implements ICommentRepository {
           orderBy: { timestamp: 'desc' },
         })
         .then((res) => {
-          return res.map(commentMapper.map);
+          return res.map((comment) => commentMapper.mapComment(comment));
         });
       return commentsWithChildren;
     } catch (error) {
