@@ -11,7 +11,8 @@ export interface ICommentRepository {
   list(): Promise<getCommentReturn[]>;
   listByPost(
     postId: string,
-    parentCommentId?: string
+    isRefetching: boolean,
+    cursor?: string
   ): Promise<getCommentReturn[]>;
   listCommentChildren(commentId: string): Promise<getCommentReturn[]>;
   update(

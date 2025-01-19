@@ -1,3 +1,4 @@
+import { REPL_MODE_STRICT } from 'repl';
 import { ICommentRepository } from '../repository/interface/commentdbInterface';
 import { createCommentReturn } from '../types/createCommentReturn';
 import { getCommentReturn } from '../types/getCommentReturn';
@@ -31,12 +32,14 @@ export class CommentController implements ICommentController {
   }
   async getPostComments(
     postId: string,
-    parentCommentId?: string
+    isRefetching: boolean,
+    cursor?: string
   ): Promise<getCommentReturn[]> {
     try {
       const comments = await this.CommentRepository.listByPost(
         postId,
-        parentCommentId || undefined
+        isRefetching,
+        cursor || undefined
       );
       return comments;
     } catch (error: any) {
@@ -45,8 +48,16 @@ export class CommentController implements ICommentController {
       throw new Error(err_msg);
     }
   }
-  getReplies(commentId: string): Promise<getCommentReturn[]> {
-    throw new Error('Method not implemented.');
+  async getReplies(commentId: string): Promise<getCommentReturn[]> {
+    try {
+      const replies =
+        await this.CommentRepository.listCommentChildren(commentId);
+      return replies;
+    } catch (error: any) {
+      const err_msg = 'Unexpected error occured while fetching post comments.';
+      console.error(`${err_msg}\nError message: ${error.message}`);
+      throw new Error(err_msg);
+    }
   }
   async updateComment(
     commentId: string,

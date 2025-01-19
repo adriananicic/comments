@@ -11,7 +11,8 @@ export interface ICommentController {
   listComments(): Promise<getCommentReturn[]>;
   getPostComments(
     postId: string,
-    parentCommentId?: string
+    isRefetching: boolean,
+    cursor?: string
   ): Promise<getCommentReturn[]>;
   getReplies(commentId: string): Promise<getCommentReturn[]>;
   updateComment(

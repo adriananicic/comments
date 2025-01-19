@@ -29,23 +29,23 @@ export class PrismaCommentRepository implements ICommentRepository {
   }
   listByPost(
     postId: string,
-    parentCommentId?: string
+    isRefetching: boolean,
+    cursor?: string // last comment ID
   ): Promise<getCommentReturn[]> {
     try {
       const commentsWithChildren = prisma.comment
         .findMany({
           where: {
             postId: postId,
-            parentCommentId: parentCommentId ? parentCommentId : null,
+            parentCommentId: null,
           },
           include: {
             _count: {
-              select: { childComments: true }, // reply count for root comment
+              select: { childComments: true },
             },
             childComments: {
               include: {
                 _count: {
-                  // reply count for first child of root comment
                   select: { childComments: true },
                 },
                 commenter: true,
@@ -54,6 +54,9 @@ export class PrismaCommentRepository implements ICommentRepository {
             commenter: true,
           },
           orderBy: { timestamp: 'asc' },
+          cursor: cursor ? { commentId: cursor } : undefined,
+          skip: cursor ? 1 : undefined,
+          take: isRefetching ? undefined : -10,
         })
         .then((res) => {
           return res.map((comment) => commentMapper.mapComment(comment));
@@ -65,7 +68,35 @@ export class PrismaCommentRepository implements ICommentRepository {
   }
 
   listCommentChildren(commentId: string): Promise<getCommentReturn[]> {
-    throw new Error('Method not implemented.');
+    try {
+      const childComments = prisma.comment
+        .findMany({
+          where: {
+            parentCommentId: commentId,
+          },
+          include: {
+            _count: {
+              select: { childComments: true },
+            },
+            // childComments: {
+            //   include: {
+            //     _count: {
+            //       select: { childComments: true },
+            //     },
+            //   },
+            // },
+            commenter: true,
+          },
+          orderBy: { timestamp: 'asc' },
+          take: -10,
+        })
+        .then((res) => {
+          return res.map((comment) => commentMapper.mapComment(comment));
+        });
+      return childComments;
+    } catch (error) {
+      throw new Error('Error while fetching blog post comments.');
+    }
   }
 
   update(
