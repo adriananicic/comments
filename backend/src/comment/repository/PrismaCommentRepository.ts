@@ -53,10 +53,11 @@ export class PrismaCommentRepository implements ICommentRepository {
             },
             commenter: true,
           },
-          orderBy: { timestamp: !(cursor && isRefetching) ? 'desc' : 'asc' },
+
+          orderBy: { timestamp: isRefetching ? 'asc' : 'desc' },
           cursor: cursor ? { commentId: cursor } : undefined,
           skip: cursor && !isRefetching ? 1 : undefined,
-          take: cursor && isRefetching ? undefined : 3,
+          take: !isRefetching ? 7 : undefined,
         })
         .then((res) => {
           return res.map((comment) => commentMapper.mapComment(comment));

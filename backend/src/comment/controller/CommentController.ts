@@ -41,7 +41,7 @@ export class CommentController implements ICommentController {
         isRefetching || undefined,
         cursor || undefined
       ).then((res) => {
-        if (!(cursor && isRefetching)) return res.reverse();
+        if (!isRefetching) return res.reverse();
         else {
           return res;
         }

@@ -29,7 +29,6 @@ commentRouter.get(
         params.cursor
       );
       if (newComment) res.status(200).json({ data: newComment });
-      // res.status(500).json({ message: 'Unexpected error occured.' });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
