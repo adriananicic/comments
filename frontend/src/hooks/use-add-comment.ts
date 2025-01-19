@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BE_URL } from '../../constants';
+
 import { useAlert } from '@/components/context/AlertContext';
 
 export const useAddComment = () => {
@@ -15,19 +15,22 @@ export const useAddComment = () => {
     try {
       setIsAddingComment(true);
 
-      const res = await fetch(`${BE_URL}/comment/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BE_URL}/comment/create`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
 
-        body: JSON.stringify({
-          body: commentText,
-          commenterId: commenterId,
-          postId: postId,
-          parentCommentId: parentCommentId,
-        }),
-      });
+          body: JSON.stringify({
+            body: commentText,
+            commenterId: commenterId,
+            postId: postId,
+            parentCommentId: parentCommentId,
+          }),
+        }
+      );
 
       if (res.ok) setSuccessMessage('Comment added');
 

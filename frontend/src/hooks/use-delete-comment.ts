@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { BE_URL } from '../../constants';
 import { useAlert } from '@/components/context/AlertContext';
 
 export const useDeleteComment = () => {
@@ -9,13 +8,15 @@ export const useDeleteComment = () => {
   const deleteComment = async (commentId: string) => {
     setIsCommentDeleting(true);
 
-    try {
-      const res = await fetch(`${BE_URL}/comment/delete/${commentId}`, {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BE_URL}/comment/delete/${commentId}`,
+      {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      }
+    );
 
       if (res.ok) setSuccessMessage('Comment deleted');
     } catch (error: any) {

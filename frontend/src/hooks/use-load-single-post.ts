@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BE_URL } from '../../constants';
+
 import { getCommentReturn, Post } from '@/types';
 import { useAlert } from '@/components/context/AlertContext';
 
@@ -14,12 +14,15 @@ export const useLoadSinglePost = (postId: string) => {
     try {
       setIsPostFetching(true);
 
-      const res = await fetch(`${BE_URL}/post/get/${postId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BE_URL}/post/get/${postId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       const post = await res.json();
       setPost(post.data);
 
@@ -35,7 +38,7 @@ export const useLoadSinglePost = (postId: string) => {
       setIsCommentFetching(true);
 
       const res = await fetch(
-        `${BE_URL}/comment/getPostComments?postId=${postId}`,
+        `${process.env.NEXT_PUBLIC_BE_URL}/comment/getPostComments?postId=${postId}`,
         {
           method: 'GET',
           headers: {
@@ -57,7 +60,7 @@ export const useLoadSinglePost = (postId: string) => {
   const fetchReplies = async (parent: getCommentReturn) => {
     try {
       const res = await fetch(
-        `${BE_URL}/comment/getPostComments?postId=${postId}&parentCommentId=${parent.commentId}`,
+        `${process.env.NEXT_PUBLIC_BE_URL}/comment/getPostComments?postId=${postId}&parentCommentId=${parent.commentId}`,
         {
           method: 'GET',
           headers: {

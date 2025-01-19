@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BE_URL } from '../../constants';
+
 import { Post } from '@/types';
 import { useAlert } from '@/components/context/AlertContext';
 
@@ -12,7 +12,7 @@ export const useLoadPosts = () => {
     try {
       setIsFetchingPosts(true);
 
-      const res = await fetch(`${BE_URL}/post/list`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BE_URL}/post/list`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
