@@ -32,15 +32,20 @@ export class CommentController implements ICommentController {
   }
   async getPostComments(
     postId: string,
-    isRefetching: boolean,
+    isRefetching?: string,
     cursor?: string
   ): Promise<getCommentReturn[]> {
     try {
       const comments = await this.CommentRepository.listByPost(
         postId,
-        isRefetching,
+        isRefetching || undefined,
         cursor || undefined
-      );
+      ).then((res) => {
+        if (!(cursor && isRefetching)) return res.reverse();
+        else {
+          return res;
+        }
+      });
       return comments;
     } catch (error: any) {
       const err_msg = 'Unexpected error occured while fetching post comments.';

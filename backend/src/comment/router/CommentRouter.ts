@@ -13,7 +13,7 @@ commentRouter.get(
       any,
       any,
       any,
-      { postId: string; isRefetching: boolean; cursor?: string }
+      { postId: string; isRefetching?: string; cursor?: string }
     >,
     res: Response
   ) => {

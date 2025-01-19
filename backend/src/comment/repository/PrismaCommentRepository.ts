@@ -29,8 +29,8 @@ export class PrismaCommentRepository implements ICommentRepository {
   }
   listByPost(
     postId: string,
-    isRefetching: boolean,
-    cursor?: string // last comment ID
+    isRefetching?: string,
+    cursor?: string
   ): Promise<getCommentReturn[]> {
     try {
       const commentsWithChildren = prisma.comment
@@ -53,10 +53,10 @@ export class PrismaCommentRepository implements ICommentRepository {
             },
             commenter: true,
           },
-          orderBy: { timestamp: 'asc' },
+          orderBy: { timestamp: !(cursor && isRefetching) ? 'desc' : 'asc' },
           cursor: cursor ? { commentId: cursor } : undefined,
-          skip: cursor ? 1 : undefined,
-          take: isRefetching ? undefined : -10,
+          skip: cursor && !isRefetching ? 1 : undefined,
+          take: cursor && isRefetching ? undefined : 3,
         })
         .then((res) => {
           return res.map((comment) => commentMapper.mapComment(comment));
