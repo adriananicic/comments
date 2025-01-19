@@ -11,30 +11,49 @@ interface ICommentSectionProps {
   postId: string;
 }
 const CommentSection: FC<ICommentSectionProps> = ({ postId }) => {
-  const { comments, refetchComments, fetchReplies } = useLoadSinglePost(postId);
+  const { comments, refetchComments, fetchReplies, loadMoreComments } =
+    useLoadSinglePost(postId);
 
-  const commentsRef = useRef<HTMLDivElement | null>(null);
   const containerScrollRef = useRef<HTMLDivElement | null>(null);
-  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
-  const [firstCommentId, setFirstCommentId] = useState<string>('');
+  const [scrollToBottomFlag, setScrollToBottomFlag] = useState<boolean>(true);
 
   const handleScroll = () => {
-    if (containerScrollRef.current) {
-      if (containerScrollRef.current.scrollTop === 0) {
-        // setFirstCommentId(comments[0].id);
-        // loadMoreComments();
-        const element = document.getElementById(firstCommentId);
-        element?.scrollIntoView();
-      }
+    const container = containerScrollRef.current;
+    if (!container) return;
+
+    if (container.scrollTop === 0) {
+      loadMoreComments(comments[0].commentId);
     }
   };
 
   useEffect(() => {
-    if (commentsRef.current)
-      if (containerScrollRef.current?.scrollTop !== 0 || isInitialLoad)
-        commentsRef.current.scrollIntoView();
-    setIsInitialLoad(false);
-  }, [comments]);
+    const container = containerScrollRef.current;
+    if (!container) return;
+
+    if (scrollToBottomFlag) {
+      container.scrollTop = container.scrollHeight;
+      setScrollToBottomFlag(false);
+    } else {
+      const prevScrollHeight = container.scrollHeight;
+      const prevScrollTop = container.scrollTop;
+
+      const timeout = setTimeout(() => {
+        container.scrollTop =
+          prevScrollTop + (container.scrollHeight - prevScrollHeight);
+      }, 0);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [comments, scrollToBottomFlag]);
+
+  const handleNewComment = async () => {
+    await refetchComments(comments[0].commentId);
+    setScrollToBottomFlag(true);
+  };
+
+  useEffect(() => {
+    setScrollToBottomFlag(true);
+  }, []);
 
   return (
     <div className="w-full flex items-center flex-col">
@@ -45,28 +64,26 @@ const CommentSection: FC<ICommentSectionProps> = ({ postId }) => {
           onScroll={handleScroll}
           className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary"
         >
-          <div className="flex flex-col w-full gap-4 relative min-h-full py-8 sm:overflow-x-hidden ">
+          <div className="flex flex-col w-full gap-4 relative min-h-full py-8 sm:overflow-x-hidden">
             {comments.length > 0 &&
               comments.map((comment, index) => (
                 <div id={comment.commentId} key={index}>
                   {index === 0 && <CommentDate date={comment.timestamp} />}
-                  {comments[index + 1] &&
-                    formatDateFromTimestamp(comment.timestamp) !==
-                      formatDateFromTimestamp(
-                        comments[index + 1].timestamp
-                      ) && <CommentDate date={comments[index + 1].timestamp} />}
                   <CommentCard
                     fetchReplies={fetchReplies}
                     key={comment.commentId}
                     comment={comment}
                     refetchComments={refetchComments}
                   />
+                  {comments[index + 1] &&
+                    formatDateFromTimestamp(comment.timestamp) !==
+                      formatDateFromTimestamp(
+                        comments[index + 1].timestamp
+                      ) && <CommentDate date={comments[index + 1].timestamp} />}
                 </div>
               ))}
           </div>
-          <AddComment refetchComments={refetchComments} />
-
-          <div ref={commentsRef} />
+          <AddComment refetchComments={handleNewComment} />
         </div>
       </CommentContextProvider>
     </div>

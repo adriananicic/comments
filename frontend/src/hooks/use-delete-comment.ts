@@ -17,7 +17,7 @@ export const useDeleteComment = () => {
         },
       }
     );
-
+    try {
       if (res.ok) setSuccessMessage('Comment deleted');
     } catch (error: any) {
       setErrorMessage(error.message);

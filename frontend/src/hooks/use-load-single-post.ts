@@ -33,22 +33,24 @@ export const useLoadSinglePost = (postId: string) => {
     }
   };
 
-  const fetchComments = async () => {
+  const fetchComments = async (isRefetching: boolean, cursor?: string) => {
     try {
       setIsCommentFetching(true);
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BE_URL}/comment/getPostComments?postId=${postId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      let fetchLink = `${process.env.NEXT_PUBLIC_BE_URL}/comment/get/postComments?postId=${postId}`;
+      if (isRefetching) fetchLink += `&isRefetching=${isRefetching}`;
+      if (cursor) fetchLink += `&cursor=${cursor}`;
+
+      console.log(fetchLink);
+
+      const res = await fetch(fetchLink, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const commentList = await res.json();
       setComments(commentList.data);
-      console.log(commentList.data);
 
       setIsCommentFetching(false);
     } catch (error: any) {
@@ -60,7 +62,7 @@ export const useLoadSinglePost = (postId: string) => {
   const fetchReplies = async (parent: getCommentReturn) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BE_URL}/comment/getPostComments?postId=${postId}&parentCommentId=${parent.commentId}`,
+        `${process.env.NEXT_PUBLIC_BE_URL}/comment/get/replies/${parent.commentId}`,
         {
           method: 'GET',
           headers: {
@@ -103,13 +105,28 @@ export const useLoadSinglePost = (postId: string) => {
     }
   };
 
-  const refetchComments = async () => {
-    await fetchComments();
+  const refetchComments = async (cursor?: string) => {
+    await fetchComments(true, cursor);
+  };
+
+  const loadMoreComments = async (cursor: string) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BE_URL}/comment/get/postComments?postId=${postId}&isRefetching=&cursor=${cursor}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const prevComments = await res.json();
+    const newCommentList = [...prevComments.data, ...comments];
+    setComments(newCommentList);
   };
 
   useEffect(() => {
     fetchPost();
-    fetchComments();
+    fetchComments(false);
   }, []);
 
   return {
@@ -119,5 +136,6 @@ export const useLoadSinglePost = (postId: string) => {
     refetchComments,
     isCommentFetching,
     fetchReplies,
+    loadMoreComments,
   };
 };
