@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { BE_URL } from '../../constants';
 import { getCommentReturn, Post } from '@/types';
+import { useAlert } from '@/components/context/AlertContext';
 
 export const useLoadSinglePost = (postId: string) => {
   const [post, setPost] = useState<Post>();
   const [comments, setComments] = useState<getCommentReturn[]>([]);
   const [isPostFetching, setIsPostFetching] = useState<boolean>(false);
   const [isCommentFetching, setIsCommentFetching] = useState<boolean>(false);
+  const { setErrorMessage } = useAlert();
 
   const fetchPost = async () => {
     try {
@@ -22,7 +24,8 @@ export const useLoadSinglePost = (postId: string) => {
       setPost(post.data);
 
       setIsPostFetching(false);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.message);
       console.log(error);
     }
   };
@@ -45,7 +48,8 @@ export const useLoadSinglePost = (postId: string) => {
       console.log(commentList.data);
 
       setIsCommentFetching(false);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.message);
       console.log(error);
     }
   };
@@ -88,10 +92,10 @@ export const useLoadSinglePost = (postId: string) => {
         });
       };
 
-      const asdf = updateComment(comments, parent.commentId);
-      setComments(asdf);
-      console.log('comments: ', comments);
-    } catch (error) {
+      const updatedList = updateComment(comments, parent.commentId);
+      setComments(updatedList);
+    } catch (error: any) {
+      setErrorMessage(error.message);
       console.log('Error fetching replies:', error);
     }
   };

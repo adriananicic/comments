@@ -8,10 +8,11 @@ import { useAuth } from '@/components/context/AuthContext';
 import Button from '@/components/atoms/Button';
 import { getCommentReturn } from '@/types';
 import { useDeleteComment } from '@/hooks/use-delete-comment';
+import { useAlert } from '@/components/context/AlertContext';
 
 interface ICommentCardProps {
   comment: getCommentReturn;
-  refetchComments: () => void;
+  refetchComments: () => Promise<void>;
   fetchReplies: (parent: getCommentReturn) => void;
 }
 
@@ -33,7 +34,7 @@ const CommentCard: FC<ICommentCardProps> = ({
 
   const handleDeleteClick = async (commentId: string) => {
     await deleteComment(commentId);
-    refetchComments();
+    await refetchComments();
   };
 
   return (

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { BE_URL } from '../../constants';
 import { getUserReturn } from '@/types';
+import { useAlert } from '@/components/context/AlertContext';
 
 export const useLoadUsers = () => {
   const [users, setUsers] = useState<getUserReturn[]>();
   const [isFetchingUsers, setIsFetchingUsers] = useState<boolean>(false);
+  const { setErrorMessage } = useAlert();
 
   const fetchUsers = async () => {
     try {
@@ -20,7 +22,8 @@ export const useLoadUsers = () => {
       setUsers(users.data);
 
       setIsFetchingUsers(false);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.message);
       console.log(error);
     }
   };

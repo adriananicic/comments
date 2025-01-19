@@ -20,7 +20,6 @@ interface IAddCommentProps {
 const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
   const { addComment, isAddingComment } = useAddComment();
   const { userId } = useAuth();
-  const { setSuccessMessage } = useAlert();
 
   const [text, setText] = useState<string>('');
   const postId = usePathname().split('/')[2];
@@ -34,7 +33,6 @@ const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
     e.preventDefault();
     userId && (await addComment(text, userId, postId, replyToId));
     userId && (await refetchComments());
-    setSuccessMessage('Added a new comment');
     setText('');
   };
 

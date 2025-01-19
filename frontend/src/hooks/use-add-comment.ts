@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { BE_URL } from '../../constants';
+import { useAlert } from '@/components/context/AlertContext';
 
 export const useAddComment = () => {
   const [isAddingComment, setIsAddingComment] = useState<boolean>(false);
+  const { setErrorMessage, setSuccessMessage } = useAlert();
 
   const addComment = async (
     commentText: string,
@@ -27,12 +29,11 @@ export const useAddComment = () => {
         }),
       });
 
-      if (res.ok) console.log('Added comment');
-
-      console.log();
+      if (res.ok) setSuccessMessage('Comment added');
 
       setIsAddingComment(false);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.message);
       console.log(error);
     }
   };

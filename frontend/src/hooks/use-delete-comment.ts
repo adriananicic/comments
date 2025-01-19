@@ -1,20 +1,26 @@
 import { useState } from 'react';
 import { BE_URL } from '../../constants';
+import { useAlert } from '@/components/context/AlertContext';
 
 export const useDeleteComment = () => {
   const [isCommentDeleting, setIsCommentDeleting] = useState<boolean>(false);
+  const { setErrorMessage, setSuccessMessage } = useAlert();
 
   const deleteComment = async (commentId: string) => {
     setIsCommentDeleting(true);
 
-    const res = await fetch(`${BE_URL}/comment/delete/${commentId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      const res = await fetch(`${BE_URL}/comment/delete/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    if (res.ok) console.log('Comment deleted');
+      if (res.ok) setSuccessMessage('Comment deleted');
+    } catch (error: any) {
+      setErrorMessage(error.message);
+    }
     setIsCommentDeleting(false);
   };
 
