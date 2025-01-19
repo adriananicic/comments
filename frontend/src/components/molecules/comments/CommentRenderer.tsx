@@ -8,7 +8,7 @@ const CommentRenderer = ({ text }: { text: string }) => {
             href={word.startsWith('www.') ? `https://${word}` : word}
             target="_blank"
             rel="noopener noreferrer"
-            className="body-2 text-accent"
+            className="body-2 text-accent break-words w-[500px] "
           >
             {word}
           </a>
@@ -23,7 +23,7 @@ const CommentRenderer = ({ text }: { text: string }) => {
     });
   };
 
-  return <div>{renderText(text)}</div>;
+  return <div className="">{renderText(text)}</div>;
 };
 
 export default CommentRenderer;
