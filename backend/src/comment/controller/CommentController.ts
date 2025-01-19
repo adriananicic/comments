@@ -28,7 +28,7 @@ export class CommentController implements ICommentController {
     }
   }
   listComments(): Promise<getCommentReturn[]> {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented!');
   }
   async getPostComments(
     postId: string,
