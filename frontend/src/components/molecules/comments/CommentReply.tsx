@@ -18,7 +18,6 @@ const CommentReply: FC<ICommentReplyProps> = ({
   fetchReplies,
 }) => {
   const postId = usePathname().split('/')[2];
-  console.log('reply: ', reply);
   return (
     <div
       onClick={() => fetchReplies(reply)}

@@ -37,7 +37,7 @@ const CommentCard: FC<ICommentCardProps> = ({
   };
 
   return (
-    <div className="flex items-start justify-start gap-3  ">
+    <div className="flex items-start justify-start gap-3 w-full ">
       <img
         height={48}
         width={48}
@@ -45,11 +45,11 @@ const CommentCard: FC<ICommentCardProps> = ({
         src={comment.commenter.profilePicture}
         alt={comment.commenter.name}
       />
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 overflow-hidden ">
+        <div className="flex  items-center gap-2">
           <div
             onClick={() => setShowReplies((prev) => !prev)}
-            className="flex  flex-col bg-primary-weak rounded-md border-[1px] border-primary-medium p-6 gap-3 cursor-pointer "
+            className="flex  flex-col bg-primary-weak rounded-md border-[1px] border-primary-medium p-6 gap-3 cursor-pointer break-words overflow-hidden text-ellipsis "
           >
             <p className="text-primary-strong body-1">
               {comment.commenter.name}

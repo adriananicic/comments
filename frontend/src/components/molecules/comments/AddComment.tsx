@@ -1,17 +1,26 @@
 import Button from '@/components/atoms/Button';
+import { useAlert } from '@/components/context/AlertContext';
 import { useAuth } from '@/components/context/AuthContext';
 import { useCommentId } from '@/components/context/CommentContext';
 import { useAddComment } from '@/hooks/use-add-comment';
 import { usePathname } from 'next/navigation';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 interface IAddCommentProps {
-  refetchComments: () => void;
+  refetchComments: () => Promise<void>;
 }
 
 const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
   const { addComment, isAddingComment } = useAddComment();
   const { userId } = useAuth();
+  const { setSuccessMessage } = useAlert();
 
   const [text, setText] = useState<string>('');
   const postId = usePathname().split('/')[2];
@@ -20,6 +29,14 @@ const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
     useCommentId();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    userId && (await addComment(text, userId, postId, replyToId));
+    userId && (await refetchComments());
+    setSuccessMessage('Added a new comment');
+    setText('');
+  };
 
   useEffect(() => {
     if (replyToId) inputRef.current?.focus();
@@ -33,12 +50,7 @@ const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
         </div>
       )}
       <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          userId && (await addComment(text, userId, postId, replyToId));
-          await refetchComments();
-          setText('');
-        }}
+        onSubmit={(e) => handleSubmit(e)}
         className="  gap-4 p-2 bg-primary-weak border-[1px] border-primary-medium rounded-md flex justify-between items-center"
       >
         <Button buttonType="normal" type="button" icon="plus" />

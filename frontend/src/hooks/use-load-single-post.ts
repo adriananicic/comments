@@ -96,8 +96,8 @@ export const useLoadSinglePost = (postId: string) => {
     }
   };
 
-  const refetchComments = () => {
-    fetchComments();
+  const refetchComments = async () => {
+    await fetchComments();
   };
 
   useEffect(() => {

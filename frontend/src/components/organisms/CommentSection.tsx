@@ -45,7 +45,7 @@ const CommentSection: FC<ICommentSectionProps> = ({ postId }) => {
           onScroll={handleScroll}
           className="max-w-[1000px] h-[550px] px-6 w-full overflow-y-auto bg-background rounded-md border-[1px] border-primary"
         >
-          <div className="flex flex-col gap-4 relative min-h-full py-8">
+          <div className="flex flex-col w-full gap-4 relative min-h-full py-8 sm:overflow-x-hidden ">
             {comments.length > 0 &&
               comments.map((comment, index) => (
                 <div id={comment.commentId} key={index}>
