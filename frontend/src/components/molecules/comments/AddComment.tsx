@@ -30,10 +30,14 @@ const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    userId && (await addComment(text, userId, postId, replyToId));
-    userId && (await refetchComments());
-    setText('');
+    if (text != '') {
+      e.preventDefault();
+      userId && (await addComment(text, userId, postId, replyToId));
+      userId && (await refetchComments());
+      setText('');
+      setReplyToId(null);
+      setReplyToText(null);
+    }
   };
 
   useEffect(() => {
