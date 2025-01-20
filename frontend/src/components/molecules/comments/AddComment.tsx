@@ -55,7 +55,12 @@ const AddComment: FC<IAddCommentProps> = ({ refetchComments }) => {
         onSubmit={(e) => handleSubmit(e)}
         className="  gap-4 p-2 bg-primary-weak border-[1px] border-primary-medium rounded-md flex justify-between items-center"
       >
-        <Button buttonType="normal" type="button" icon="plus" />
+        <Button
+          onClick={() => refetchComments()}
+          buttonType="normal"
+          type="button"
+          icon="plus"
+        />
         {replyToId && (
           <div
             onClick={() => {
