@@ -42,7 +42,6 @@ commentRouter.get(
     const commentId = req.params.commentId;
     try {
       const replies = await commentController.getReplies(commentId);
-      console.log(`comment replies ${JSON.stringify(replies)}`);
 
       res.status(200).json({ data: replies });
     } catch (error: any) {

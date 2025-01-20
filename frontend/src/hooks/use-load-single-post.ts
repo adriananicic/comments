@@ -41,8 +41,6 @@ export const useLoadSinglePost = (postId: string) => {
       if (isRefetching) fetchLink += `&isRefetching=${isRefetching}`;
       if (cursor) fetchLink += `&cursor=${cursor}`;
 
-      console.log(fetchLink);
-
       const res = await fetch(fetchLink, {
         method: 'GET',
         headers: {

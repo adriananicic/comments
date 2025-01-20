@@ -76,7 +76,7 @@ const CommentCard: FC<ICommentCardProps> = ({
             onClick={() => handleReplyClick(comment.body)}
             className="text-base font-medium text-accent cursor-pointer"
           >
-            Reply {comment.childComments && `(${comment.noOfReplies})`}
+            Reply {comment.noOfReplies ? `(${comment.noOfReplies})` : ''}
           </p>
         </div>
         {showReplies &&
@@ -89,7 +89,6 @@ const CommentCard: FC<ICommentCardProps> = ({
                 reply={reply}
                 refetchComments={refetchComments}
               />
-              
             )
           )}
       </div>
