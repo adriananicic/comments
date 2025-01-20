@@ -28,7 +28,8 @@ commentRouter.get(
         params.isRefetching,
         params.cursor
       );
-      if (newComment) res.status(200).json({ data: newComment });
+
+      res.status(200).json({ data: newComment });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -40,9 +41,10 @@ commentRouter.get(
   async (req: Request, res: Response) => {
     const commentId = req.params.commentId;
     try {
-      const newComment = await commentController.getReplies(commentId);
-      if (newComment) res.status(200).json({ data: newComment });
-      // res.status(500).json({ message: 'Unexpected error occured.' });
+      const replies = await commentController.getReplies(commentId);
+      console.log(`comment replies ${JSON.stringify(replies)}`);
+
+      res.status(200).json({ data: replies });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -53,8 +55,7 @@ commentRouter.post('/create', async (req: Request, res: Response) => {
   const createData = req.body;
   try {
     const newComment = await commentController.createComment(createData);
-    if (newComment) res.status(200).json({ success: true });
-    // res.status(500).json({ message: 'Unexpected error occured.' });
+    res.status(200).json({ success: true });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -66,8 +67,7 @@ commentRouter.delete(
     const commentId = req.params.commentId;
     try {
       const deletedComment = await commentController.deleteComment(commentId);
-      if (deletedComment) res.status(200).json({ success: true });
-      // res.status(500).json({ message: 'Unexpected error occured.' });
+      res.status(200).json({ success: true });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

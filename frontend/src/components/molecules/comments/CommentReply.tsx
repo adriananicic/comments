@@ -7,7 +7,7 @@ import { getCommentReturn } from '@/types';
 interface ICommentReplyProps {
   reply: getCommentReturn;
   index: number;
-  refetchComments: () => void;
+  refetchComments: () => Promise<void>;
   fetchReplies: (parent: getCommentReturn) => void;
 }
 
@@ -15,12 +15,15 @@ const CommentReply: FC<ICommentReplyProps> = ({
   index,
   reply,
   refetchComments,
-  fetchReplies,
+    fetchReplies,
 }) => {
   const postId = usePathname().split('/')[2];
+  
   return (
     <div
-      onClick={() => fetchReplies(reply)}
+      onClick={(e) => {
+        e.stopPropagation()
+        reply.noOfReplies > 0 ? fetchReplies(reply) : null}}
       className="flex items-start gap-3 relative"
     >
       {index === 0 && (
@@ -34,7 +37,9 @@ const CommentReply: FC<ICommentReplyProps> = ({
         refetchComments={refetchComments}
         fetchReplies={fetchReplies}
       />
+      
     </div>
+       
   );
 };
 

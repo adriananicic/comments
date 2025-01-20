@@ -17,6 +17,7 @@ const CommentSection: FC<ICommentSectionProps> = ({ postId }) => {
   const containerScrollRef = useRef<HTMLDivElement | null>(null);
   const [scrollToBottomFlag, setScrollToBottomFlag] = useState<boolean>(true);
 
+
   const handleScroll = () => {
     const container = containerScrollRef.current;
     if (!container) return;
@@ -45,6 +46,7 @@ const CommentSection: FC<ICommentSectionProps> = ({ postId }) => {
       return () => clearTimeout(timeout);
     }
   }, [comments, scrollToBottomFlag]);
+
 
   const handleNewComment = async () => {
     await refetchComments(comments[0].commentId);

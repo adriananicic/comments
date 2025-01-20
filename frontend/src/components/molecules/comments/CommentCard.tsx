@@ -8,7 +8,6 @@ import { useAuth } from '@/components/context/AuthContext';
 import Button from '@/components/atoms/Button';
 import { getCommentReturn } from '@/types';
 import { useDeleteComment } from '@/hooks/use-delete-comment';
-import { useAlert } from '@/components/context/AlertContext';
 
 interface ICommentCardProps {
   comment: getCommentReturn;
@@ -90,6 +89,7 @@ const CommentCard: FC<ICommentCardProps> = ({
                 reply={reply}
                 refetchComments={refetchComments}
               />
+              
             )
           )}
       </div>

@@ -96,8 +96,7 @@ export const useLoadSinglePost = (postId: string) => {
           return comment;
         });
       };
-
-      const updatedList = updateComment(comments, parent.commentId);
+      const updatedList = [...updateComment(comments, parent.commentId)];
       setComments(updatedList);
     } catch (error: any) {
       setErrorMessage(error.message);

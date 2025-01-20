@@ -62,6 +62,7 @@ export class PrismaCommentRepository implements ICommentRepository {
         .then((res) => {
           return res.map((comment) => commentMapper.mapComment(comment));
         });
+
       return commentsWithChildren;
     } catch (error) {
       throw new Error('Error while fetching blog post comments.');
@@ -79,17 +80,10 @@ export class PrismaCommentRepository implements ICommentRepository {
             _count: {
               select: { childComments: true },
             },
-            // childComments: {
-            //   include: {
-            //     _count: {
-            //       select: { childComments: true },
-            //     },
-            //   },
-            // },
             commenter: true,
           },
           orderBy: { timestamp: 'asc' },
-          take: -10,
+          take: 10,
         })
         .then((res) => {
           return res.map((comment) => commentMapper.mapComment(comment));
